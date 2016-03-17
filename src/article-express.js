@@ -79,9 +79,9 @@ exports.edit = (req, res, next) => {
 
 // 分页相关
 exports.pageAt = (page) => {
-	var total = this.getPageNum;
+	var total = this.getPageNum();
 
-	if (page+1 > total) {
+	if (page > total) {
 		return -1;
 	} else {
 		return list[page-1];

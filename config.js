@@ -7,5 +7,8 @@ module.exports = {
 		template: './template',
 		article: './article',
 		resource: './static'
+	},
+	env: {
+		pageSize: 10
 	}
 }

@@ -10,6 +10,8 @@ var conf = require('./config');
  * 第三方中间件
  *
  ******************************************/
+ var bodyParser = require('body-parser');
+ var multer = require('multer');
 
 
 
@@ -47,6 +49,13 @@ app.use('/resource', express.static(
 ));
 
 // 添加公用中间件
+
+// for parsing application/json
+//app.use(bodyParser.json()); 
+// for parsing application/x-www-form-urlencoded
+//app.use(bodyParser.urlencoded({ extended: true })); 
+// for parsing multipart/form-data
+//app.use(multer()); 
 
 // 文章模块
 

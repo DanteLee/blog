@@ -34,7 +34,10 @@ class List{
 		var list = this.list;
 
 		for (var name in buffer) {
-			list.push(buffer[name]);
+			list.push({
+				date: buffer[name].date,
+				name: name
+			});
 		}
 
 		list.sort((a, b) => {
@@ -103,7 +106,7 @@ class List{
 exports.get = (name) => {
 	// 判断是否存在
 	if (!(name in buffer)) {
-		return Promise.reject();
+		return Promise.reject(404);
 	}
 
 	return Promise.resolve(buffer[name]);
@@ -113,7 +116,7 @@ exports.get = (name) => {
 exports.add = (name, content) => {
 	// 判断重名
 	if (name in buffer) {
-		return Promise.reject();
+		return Promise.reject(403);
 	}
 
 	var data = {
@@ -125,7 +128,7 @@ exports.add = (name, content) => {
 	return (new Promise((resolve, reject) => {
 		fs.writeFile(fullpath, JSON.stringify(data), 'utf8', (e) => {
 			if (e) {
-				reject();
+				reject(500);
 			} else {
 				resolve();
 			}
@@ -140,7 +143,7 @@ exports.add = (name, content) => {
 exports.del = (name) => {
 	// 判断文章是否存在
 	if (!(name in buffer)) {
-		return Promise.reject();
+		return Promise.reject(404);
 	}
 
 	var fullpath = `${base}\/${name}.json`;
@@ -148,7 +151,7 @@ exports.del = (name) => {
 	return (new Promise((resolve, reject) => {
 		fs.unlink(fullpath, (e) => {
 			if (e) {
-				reject();
+				reject(500);
 			} else {
 				resolve();
 			}
@@ -163,7 +166,7 @@ exports.del = (name) => {
 exports.edit = (name, content) => {
 	// 判断是否存在
 	if (!(name in buffer)) {
-		return Promise.reject();
+		return Promise.reject(404);
 	}
 
 	var data = {
@@ -175,7 +178,7 @@ exports.edit = (name, content) => {
 	return (new Promise((resolve, reject) => {
 		fs.writeFile(fullpath, JSON.stringify(data), 'utf8', (e) => {
 			if (e) {
-				reject();
+				reject(500);
 			} else {
 				resolve(fullpath);
 			}
@@ -188,5 +191,6 @@ exports.edit = (name, content) => {
 
 // 获取文章列表信息，返回一个迭代器
 exports.getList = (size) => new List(buffer, size); 
+exports.List = List;
 
 

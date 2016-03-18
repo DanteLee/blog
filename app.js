@@ -20,8 +20,8 @@ var conf = require('./config');
  * 应用中间件
  *
  ******************************************/
-var article = require('./src/article');
-
+var article = require('./src/article-express');
+var errorHandler = require('./src/error-express');
 
 
 /******************************************
@@ -37,7 +37,7 @@ app.set('view engine', 'jade');
 
 /******************************************
  *
- * 站点蓝图
+ * 静态信息
  *
  ******************************************/
 // 静态文件路由
@@ -57,7 +57,25 @@ app.use('/resource', express.static(
 // for parsing multipart/form-data
 //app.use(multer()); 
 
-// 文章模块
+/******************************************
+ *
+ * 文章模块
+ *
+ ******************************************/
+
+// 查看文章
+app.get('/article/view/:name', 
+	article.get,
+	(req, res, next) => {
+		res.render('view', {name: req.params.name, data: req.article});
+	},
+	errorHandler);
+
+// 添加文章
+
+// 编辑文章
+
+// 删除文章
 
 
 /******************************************

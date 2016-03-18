@@ -26,7 +26,7 @@ function refresh() {
 }
 
 exports.get = (req, res, next) => {
-	var name = res.params.name;
+	var name = req.params.name;
 
 	get(name).then((data) => {
 		req.article = data;
@@ -39,7 +39,7 @@ exports.get = (req, res, next) => {
 
 // 使用POST
 exports.add = (req, res, next) => {
-	var name = res.params.name;
+	var name = req.params.name;
 	var content = res.body.content;
 
 	add(name, content).then(() => {
@@ -53,7 +53,7 @@ exports.add = (req, res, next) => {
 }
 
 exports.del = (req, res, next) => {
-	var name = res.params.name;
+	var name = req.params.name;
 
 	del(name).then(() => {
 		// 更新页面列表信息
@@ -66,8 +66,8 @@ exports.del = (req, res, next) => {
 }
 
 exports.edit = (req, res, next) => {
-	var name = res.params.name;
-	var content = res.body.content;
+	var name = req.params.name;
+	var content = req.body.content;
 
 	edit(name, content).then(() => {
 		next();

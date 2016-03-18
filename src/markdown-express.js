@@ -1,12 +1,13 @@
 'use strict';
 
-var md = require('markdown').markdown;
+var Markdown = require('markdown-it');
+var md = new Markdown();
 
 exports.parser = (req, res, next) => {
-	var raw = req.body.content;
+	var raw = req.file.buffer.toString('utf8');
 
-	req.body.content = md.toHTML(raw);
-	req.body._rawContent = raw;
+	!req.body && (req.body = {});
+	req.body.content = md.render(raw);
 
 	next();
 }

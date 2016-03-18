@@ -10,8 +10,8 @@ var conf = require('./config');
  * 第三方中间件
  *
  ******************************************/
- var bodyParser = require('body-parser');
- var multer = require('multer');
+var bodyParser = require('body-parser').urlencoded({ extended: true });
+var fileparser = require('multer')().single('content');
 
 
 
@@ -22,7 +22,8 @@ var conf = require('./config');
  ******************************************/
 var article = require('./src/article-express');
 var errorHandler = require('./src/error-express');
-
+var markdown = require('./src/markdown-express');
+var verify = require('./src/verify-express.js');
 
 /******************************************
  *
@@ -72,6 +73,23 @@ app.get('/article/view/:name',
 	errorHandler);
 
 // 添加文章
+app.get('/article/add',
+	(req, res, next) => {
+		res.render('add');
+	});
+app.post('/article/add',
+	fileparser,
+	markdown.parser,
+	verify,
+	article.add,
+	(req, res, next) => {
+		res.json({
+			code: '0',
+			msg: '文章添加成功',
+			body: ''
+		})
+	},
+	errorHandler);
 
 // 编辑文章
 

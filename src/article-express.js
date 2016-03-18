@@ -39,8 +39,8 @@ exports.get = (req, res, next) => {
 
 // 使用POST
 exports.add = (req, res, next) => {
-	var name = req.params.name;
-	var content = res.body.content;
+	var name = req.body.name;
+	var content = req.body.content;
 
 	add(name, content).then(() => {
 		// 更新页面列表信息

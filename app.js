@@ -24,6 +24,7 @@ var article = require('./src/article-express');
 var errorHandler = require('./src/error-express');
 var markdown = require('./src/markdown-express');
 var verify = require('./src/verify-express.js');
+var pagebar = require('./src/page-express.js');
 
 /******************************************
  *
@@ -43,20 +44,15 @@ app.set('view engine', 'jade');
  ******************************************/
 // 静态文件路由
 app.use('/resource', express.static(
-	conf.base+conf.path.static, 
+	conf.base+conf.path.static,
 	{
 		index: false
 	}
 ));
 
 // 添加公用中间件
-
-// for parsing application/json
-//app.use(bodyParser.json()); 
-// for parsing application/x-www-form-urlencoded
-//app.use(bodyParser.urlencoded({ extended: true })); 
-// for parsing multipart/form-data
-//app.use(multer()); 
+// 添加错误处理
+app.use(errorHandler);
 
 /******************************************
  *
@@ -65,12 +61,11 @@ app.use('/resource', express.static(
  ******************************************/
 
 // 查看文章
-app.get('/article/view/:name', 
+app.get('/article/view/:name',
 	article.get,
 	(req, res, next) => {
 		res.render('view', {name: req.params.name, data: req.article});
-	},
-	errorHandler);
+	});
 
 // 添加文章
 app.get('/article/add',
@@ -88,12 +83,43 @@ app.post('/article/add',
 			msg: '文章添加成功',
 			body: ''
 		})
-	},
-	errorHandler);
+	});
 
 // 编辑文章
+app.get('/article/edit',
+	(req, res, next) => {
+		res.render('edit');
+	},
+	errorHandler);
+app.post('/article/edit/:name',
+	fileparser,
+	markdown.parser,
+	verify,
+	article.edit,
+	(req, res, next) => {
+		res.json({
+			code: '0',
+			msg: '文章编辑成功',
+			body: ''
+		})
+	});
 
 // 删除文章
+app.post('/article/del/:name',
+	verify,
+	article.del,
+	(req, res, next) => {
+		res.json({
+			code: '0',
+			msg: '文章删除成功',
+			body: ''
+		})
+	});
+
+// 文章列表
+app.get('/article/:page(\\d+)?',
+	pagebar
+);
 
 
 /******************************************
